@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: 
+      - main
+  schedule:
+   - cron: '0 16 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # - name: Download IP list
+      #   run: |
+      #     rm -f ip.txt
+      #     {
+      #       wget -qO- https://www.cloudflare-cn.com/ips-v4/#
+      #       echo ""
+      #       wget -qO- https://www.cloudflare.com/ips-v6/#
+      #     } | tee -a ip.txt
+
+      - name: Make script executable and install dependencies
+        run: |
+          chmod +x cfst
+
+      - name: Run TLS scan
+        run: |
+          ./cfst -httping -cfcolo HKG,KHH,NRT,LAX,SEA,SJC,FRA,MAD   -url "https://е.eu.org/300.zip" -sl 5
+
+
+      - name: Commit and push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "⌚️$(date +%Y%m%d%H%M%S)" -a
+          git push
