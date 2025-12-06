@@ -30,11 +30,18 @@ jobs:
 
       - name: Make script executable and install dependencies
         run: |
+          wget -O IPDBproxy.txt  https://raw.githubusercontent.com/ymyuuu/IPDB/main/proxy.txt
+          cp raw_ip.txt ip.txt
+          cat IPDBproxy.txt >> ip.txt 
           chmod +x cfst
 
       - name: Run TLS scan
         run: |
-          ./cfst -httping -cfcolo HKG,KHH,NRT,LAX,SEA,SJC,FRA,MAD   -url "https://е.eu.org/300.zip" -sl 5
+          ./cfst -httping -cfcolo HKG,KHH   -url "https://е.eu.org/300.zip" -sl 5
+      - name: mv ipdb results
+        run: |
+          mv ip.txt  oldips/ips-$(date +%Y%m%d%H%M%S).txt
+          rm -f ip.txt
 
 
       - name: Commit and push changes
