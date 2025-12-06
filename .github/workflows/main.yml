@@ -34,7 +34,7 @@ jobs:
 
       - name: Run TLS scan
         run: |
-          ./cfst -httping -cfcolo HKG,KHH,NRT,LAX,SEA,SJC,FRA,MAD   -url "https://е.eu.org/300.zip" -sl 5
+          ./cfst -httping -cfcolo HKG,KHH   -url "https://е.eu.org/300.zip" -sl 5
 
 
       - name: Commit and push changes
